@@ -1,5 +1,4 @@
-name: ECS Deployment
-
+name: "Terraform action"
 on:
   push:
     branches:
@@ -8,12 +7,11 @@ on:
 permissions:
       contents: read # This is required for actions/checkout
       pull-requests: write # This is required for gh bot to comment PR
-
+env:
+  TF_LOG: INFO
+  AWS_REGION: ${{ secrets.AWS_REGION }}
 jobs:
-
   deploy:
-    name: Terraform plan and apply
-    needs: build
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -22,7 +20,6 @@ jobs:
     steps:
       - name: Git checkout
         uses: actions/checkout@v3
-
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -52,7 +49,6 @@ jobs:
         id: validate
         run: terraform validate -no-color
 
-      
       - name: Terraform Plan
         id: plan
         run: terraform plan -no-color
@@ -96,13 +92,10 @@ jobs:
               body: output
             })
 
-      -  name: Terraform Plan Status
-         if: steps.plan.outcome == 'failure'
-         run: exit 1 
+      - name: Terraform Plan Status
+        if: steps.plan.outcome == 'failure'
+        run: exit 1
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -auto-approve -input=false
-
-      
-
