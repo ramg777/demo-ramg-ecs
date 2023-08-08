@@ -88,6 +88,8 @@ resource "aws_ecs_service" "my_service" {
     subnets = [aws_subnet.pub-subnet1.id, aws_subnet.pub-subnet2.id]
     security_groups = [aws_security_group.ecs_sg.id]
   }
+  
+  desired_count = 1
 
   load_balancer {
     target_group_arn = aws_lb_target_group.my_target_group.arn
