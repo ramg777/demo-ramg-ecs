@@ -31,6 +31,19 @@ resource "aws_ecs_task_definition" "task_definition" {
 
 }
 
+
+resource "aws_lb" "test-lb" {
+  name               = "test-lb"
+  internal           = false
+  load_balancer_type = "application"
+  enable_deletion_protection = false
+  security_groups   = [aws_security_group.ecs_sg.id]
+  subnets           = aws_subnet.pub-subnet[*].id
+
+  enable_http2      = true
+}
+
+
 # # Create an ECS service
 # resource "aws_ecs_service" "ecs_service" {
 #   name            = "ecs-service"
