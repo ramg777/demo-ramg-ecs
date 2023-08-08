@@ -70,7 +70,6 @@ resource "aws_lb_target_group" "test-tg" {
   health_check {
     path     = "/api/emails"
     interval = 120
-    status_code  = "302"
   }
   
 }
@@ -83,7 +82,7 @@ resource "aws_lb_listener_rule" "my_listener_rule" {
     type             = "fixed-response"
     fixed_response {
       content_type = "text/plain"
-      status_code  = "200"
+      status_code  = "302"
       message_body = "OK"
     }
   }
