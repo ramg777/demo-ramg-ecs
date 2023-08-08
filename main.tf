@@ -44,6 +44,15 @@ resource "aws_lb" "test-lb" {
 }
 
 
+resource "aws_lb_listener" "https_listener" {
+  load_balancer_arn = aws_lb.test-lb.arn
+  port              = 443
+  protocol          = "HTTPS"
+
+  certificate_arn = "arn:aws:acm:eu-west-2:071148681943:certificate/0b1aa564-2041-4411-851a-5e80c3aefd1e"  # Replace with your ACM certificate ARN
+}
+
+
 # # Create an ECS service
 # resource "aws_ecs_service" "ecs_service" {
 #   name            = "ecs-service"
