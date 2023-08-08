@@ -70,7 +70,6 @@ resource "aws_lb_target_group" "test-tg" {
   health_check {
     path     = "/api/emails"
     interval = 120
-    status_code  = "302"
   }
   
 }
@@ -86,7 +85,7 @@ resource "aws_lb_listener_rule" "my_listener_rule" {
       status_code  = "200"
       message_body = "OK"
     }
-  }s
+  }
 
   condition {
     path_pattern {
