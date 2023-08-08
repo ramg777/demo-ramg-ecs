@@ -72,11 +72,7 @@ resource "aws_lb_target_group" "test-tg" {
     interval = 120
     status_code  = "302"
   }
-
-  target_group_attributes {
-    key   = "stickiness.enabled"
-    value = "false"
-  }
+  
 }
 
 resource "aws_lb_listener_rule" "my_listener_rule" {
@@ -90,7 +86,7 @@ resource "aws_lb_listener_rule" "my_listener_rule" {
       status_code  = "200"
       message_body = "OK"
     }
-  }
+  }s
 
   condition {
     path_pattern {
