@@ -82,7 +82,7 @@ resource "aws_lb_listener_rule" "my_listener_rule" {
     type             = "fixed-response"
     fixed_response {
       content_type = "text/plain"
-      status_code  = "302"
+      status_code  = "200"
       message_body = "OK"
     }
   }
