@@ -61,6 +61,51 @@ resource "aws_lb_listener" "https_listener" {
   certificate_arn = "arn:aws:acm:eu-west-2:071148681943:certificate/0b1aa564-2041-4411-851a-5e80c3aefd1e"  # Replace with your ACM certificate ARN
 }
 
+resource "aws_lb_target_group" "test-tg" {
+  name     = "test-tg"
+  port     = 80
+  protocol = "HTTP"
+  vpc_id   = aws_vpc.my_vpc.id  # Replace with your VPC ID
+
+  health_check {
+    path     = "/api/emails"
+    interval = 120
+    status_code  = "302"
+  }
+
+  target_group_attributes {
+    key   = "stickiness.enabled"
+    value = "false"
+  }
+}
+
+resource "aws_lb_listener_rule" "my_listener_rule" {
+  listener_arn = aws_lb_listener.https_listener.arn
+  priority     = 100
+
+  action {
+    type             = "fixed-response"
+    fixed_response {
+      content_type = "text/plain"
+      status_code  = "200"
+      message_body = "OK"
+    }
+  }
+
+  condition {
+    path_pattern {
+      values = ["/"]
+    }
+
+    http_request_method {
+      values = ["GET"]
+    }
+
+    # source_ip {
+    #   values = ["0.0.0.0/0"]  # Adjust as needed
+    # }
+  }
+}
 
 # # Create an ECS service
 # resource "aws_ecs_service" "ecs_service" {
