@@ -75,6 +75,11 @@ resource "aws_lb_target_group" "my_target_group" {
   }
 }
 
+resource "aws_lb_target_group_attachment" "ecs_attachment" {
+  target_group_arn = aws_lb_target_group.my_target_group.arn
+  target_id        = aws_ecs_task_definition.task_definition.arn
+}
+
 resource "aws_ecs_service" "my_service" {
   name            = "my-ecs-service"
   cluster         = aws_ecs_cluster.ecs_cluster.id
