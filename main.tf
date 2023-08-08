@@ -48,50 +48,43 @@ resource "aws_lb_listener" "https_listener" {
   load_balancer_arn = aws_lb.test-lb.arn
   port              = 443
   protocol          = "HTTPS"
+  
+  
 
   certificate_arn = "arn:aws:acm:eu-west-2:071148681943:certificate/0b1aa564-2041-4411-851a-5e80c3aefd1e"  # Replace with your ACM certificate ARN
 }
 
-resource "aws_lb_target_group" "test-tg" {
-  name     = "test-tg"
+resource "aws_lb_target_group" "my_target_group" {
+  name     = "my-target-group"
   port     = 80
   protocol = "HTTP"
-  vpc_id   = aws_vpc.my_vpc.id  # Replace with your VPC ID
+  vpc_id   = aws_vpc.my_vpc.id
 
   health_check {
     path     = "/api/emails"
     interval = 120
   }
-  
 }
 
-resource "aws_lb_listener_rule" "my_listener_rule" {
-  listener_arn = aws_lb_listener.https_listener.arn
-  priority     = 100
+resource "aws_ecs_service" "my_service" {
+  name            = "my-ecs-service"
+  cluster         = aws_ecs_cluster.my_cluster.id
+  task_definition = aws_ecs_task_definition.my_task_definition.arn
 
-  action {
-    type             = "fixed-response"
-    fixed_response {
-      content_type = "text/plain"
-      status_code  = "200"
-      message_body = "OK"
-    }
+  launch_type = "FARGATE"
+
+  network_configuration {
+    subnets = [aws_subnet.pub-subnet1.id, aws_subnet.pub-subnet2.id]
+    security_groups = [aws_security_group.ecs_sg.id]
   }
 
-  condition {
-    path_pattern {
-      values = ["/"]
-    }
-
-    http_request_method {
-      values = ["GET"]
-    }
-
-    # source_ip {
-    #   values = ["0.0.0.0/0"]  # Adjust as needed
-    # }
+  load_balancer {
+    target_group_arn = aws_lb_target_group.my_target_group.arn
+    container_name   = "my-container"
+    container_port   = 8000
   }
 }
+
 
 # # Create an ECS service
 # resource "aws_ecs_service" "ecs_service" {
