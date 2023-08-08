@@ -73,10 +73,6 @@ resource "aws_lb_target_group" "my_target_group" {
   }
 }
 
-# resource "aws_lb_target_group_attachment" "ecs_attachment" {
-#   target_group_arn = aws_lb_target_group.my_target_group.arn
-#   target_id        = aws_ecs_task_definition.task_definition.arn
-# }
 
 resource "aws_ecs_service" "my_service" {
   name            = "my-ecs-service"
@@ -99,16 +95,3 @@ resource "aws_ecs_service" "my_service" {
   }
 }
 
-
-# # Create an ECS service
-# resource "aws_ecs_service" "ecs_service" {
-#   name            = "ecs-service"
-#   cluster         = aws_ecs_cluster.ecs_cluster.id
-#   task_definition = aws_ecs_task_definition.task_definition.arn
-#   desired_count   = 1
-
-#   network_configuration {
-#     subnets          = [aws_subnet.public1.id]
-#     security_groups  = [aws_security_group.ecs_sg.id]
-#   }
-# }s
