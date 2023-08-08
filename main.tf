@@ -69,6 +69,7 @@ resource "aws_lb_target_group" "my_target_group" {
   health_check {
     path     = "/api/emails"
     interval = 120
+    matcher = "200-399"
   }
 }
 
