@@ -38,7 +38,7 @@ resource "aws_lb" "test-lb" {
   load_balancer_type = "application"
   enable_deletion_protection = false
   security_groups   = [aws_security_group.ecs_sg.id]
-  subnets           = aws_subnet.pub-subnet[*].id
+  subnets           = [aws_subnet.pub-subnet1.id, aws_subnet.pub-subnet2.id]
 
   enable_http2      = true
 }
